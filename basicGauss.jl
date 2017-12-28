@@ -78,16 +78,19 @@ function backward(A, b, n)
     return x
 end
 
-function gaussElimination(A, b, n)
+function gaussElimination(A, b, n, l)
+# A[wiersz, kolumna]
 #     — Gaussian Elimination —
-    for k in 1:(n-1)
+    for k in 1:(n-1) # iterator kolumn
         println("gauss k: $k/$n")
-        for i in (k+1):n
+        for i in (k+1):n # iterator wierszy
             # println("gauss i: $i/$n")
-            A[i,k] = A[i,k]/A[k,k]
-            for j in (k+1):n
-                if A[k,j] != 0
-                    A[i,j] -= A[i,k]*A[k,j]
+            if A[i, k] != 0
+                A[i,k] = A[i,k]/A[k,k]
+                for j in (k+1):n
+                    if A[k,j] != 0
+                        A[i,j] -= A[i,k]*A[k,j]
+                    end
                 end
             end
         end
@@ -103,11 +106,16 @@ end
 # N=3
 # b = [6, 0, -2]
 # sparseA = sparse(copy(A))
-
-sparseA, N, l = readMatrixFromFile("data/1000_A.txt")
-b = readVectorFromFile("data/1000_B.txt")
+if size(ARGS)[1] > 0
+    sizeArg = parse(Int, ARGS[1])
+    sparseA, N, l = readMatrixFromFile("data/$(sizeArg)_A.txt")
+    b = readVectorFromFile("data/$(sizeArg)_B.txt")
+else
+    sparseA, N, l = readMatrixFromFile("data/1000_A.txt")
+    b = readVectorFromFile("data/1000_B.txt")
+end
 tic()
-x = gaussElimination(sparseA, b, N)
+x = gaussElimination(sparseA, b, N, l)
 toc()
 writeMatrixToFile(sparseA, "comp.csv")
 println(x)
