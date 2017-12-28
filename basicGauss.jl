@@ -96,11 +96,11 @@ function gaussElimination(A, b, n)
     x = backward(A, b, n)
     return x
 end
-
+#
 # A = [2.0    -2.0   0.0;
 #      -2    0    2;
 #      0   -2   0]
-# n=3
+# N=3
 # b = [6, 0, -2]
 # sparseA = sparse(copy(A))
 
