@@ -79,7 +79,7 @@ function gaussElimination(A, b, n, l)
 #     — Gaussian Elimination —
     for k in 1:(n-1) # iterator kolumn
         println("gauss k: $k/$n")
-        for i in (k+1):n # iterator wierszy
+        for i in (k+1):n # iterator wierszy, zaczynając od 'poniżej przekątnej' do końca
             # println("gauss i: $i/$n")
             if A[i, k] != 0
                 A[i,k] = A[i,k]/A[k,k]
@@ -113,5 +113,6 @@ end
 tic()
 gaussElimination(sparseA, b, N, l)
 toc()
-writeMatrixToFile(sparseA, "comp.csv")
+# writeMatrixToFile(sparseA, "comp.csv")
+sleep(2)
 println(b)
