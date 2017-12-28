@@ -54,6 +54,7 @@ end
 function forward(A, b, n)
 # — Forward Elimination —
     for i in 1:(n-1)
+        println("forward i: $i/$n")
         for j in (i+1):n
             if b[i] != 0
                 b[j] -= A[j,i] * b[i]
@@ -65,6 +66,7 @@ end
 function backward(A, b, n)
 #     — Backward Solve —
     for i in n:-1:1
+        println("backward u: $(n-i)/$n")
         for j in (i+1):n
             if b[j] != 0
                 b[i] -= A[i,j]*b[j]
@@ -80,7 +82,6 @@ function gaussElimination(A, b, n, l)
     for k in 1:(n-1) # iterator kolumn
         println("gauss k: $k/$n")
         for i in (k+1):n # iterator wierszy, zaczynając od 'poniżej przekątnej' do końca
-            # println("gauss i: $i/$n")
             if A[i, k] != 0
                 A[i,k] = A[i,k]/A[k,k]
                 for j in (k+1):n
