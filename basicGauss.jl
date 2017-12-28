@@ -63,19 +63,15 @@ function forward(A, b, n)
 end
 
 function backward(A, b, n)
-# remove x
 #     — Backward Solve —
-    x = zeros(n)
     for i in n:-1:1
-        s = b[i]
         for j in (i+1):n
-            if x[j] != 0
-                s -= A[i,j]*x[j]
+            if b[j] != 0
+                b[i] -= A[i,j]*b[j]
             end
         end
-        x[i] = s/A[i,i]
+        b[i] = b[i]/A[i,i]
     end
-    return x
 end
 
 function gaussElimination(A, b, n, l)
@@ -96,14 +92,14 @@ function gaussElimination(A, b, n, l)
         end
     end
     forward(A, b, n)
-    x = backward(A, b, n)
-    return x
+    backward(A, b, n)
 end
-#
+
 # A = [2.0    -2.0   0.0;
 #      -2    0    2;
 #      0   -2   0]
 # N=3
+# l=1
 # b = [6, 0, -2]
 # sparseA = sparse(copy(A))
 if size(ARGS)[1] > 0
@@ -115,7 +111,7 @@ else
     b = readVectorFromFile("data/1000_B.txt")
 end
 tic()
-x = gaussElimination(sparseA, b, N, l)
+gaussElimination(sparseA, b, N, l)
 toc()
 writeMatrixToFile(sparseA, "comp.csv")
-println(x)
+println(b)
