@@ -89,7 +89,7 @@ function gaussElimination(A, b, n, l)
         else
             limit = min(k-k%l+l, n)
         end
-        for i in (k+1):limit # iterator wierszy, zaczynając od 'poniżej przekątnej' do końca
+        for i in (k+1):limit # iterator wierszy, zaczynając od 'poniżej przekątnej' do /końca/wiadomych zer
             # if A[i, k] == 0
             #     println("CAUGHT A ZERO")
             # end
