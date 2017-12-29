@@ -47,12 +47,11 @@ function backward(A, b, n, l)
     for i in n:-1:1
         # println("backward u: $(n-i)/$n")
         for j in (i+1):min(i+l, n)
-            # if b[j] != 0 && A[i, j] != 0
-                b[i] -= A[i,j]*b[j]
-                count += 1
-            # end
+            b[i] -= A[i,j]*b[j]
+            count += 1
         end
         b[i] = b[i]/A[i,i]
+        count += 1
     end
     return count
 end
@@ -87,5 +86,5 @@ tic()
 gaussElimination(sparseA, b, N, l)
 toc()
 # writeMatrixToFile(sparseA, "comp.csv")
-# sleep(2)
-# println(b)
+println(b[1:11])
+println(b[size(b)[1]:-1:size(b)[1]-10])
