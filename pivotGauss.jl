@@ -7,7 +7,6 @@ function pivotalGaussianElimination(A, b, n, l)
     s = zeros(n)
     count = 0
     for i in 1:n # rows iterator, this block computes the array of row maximal elements
-        s[i] = 0
         for j in getNonZeroElementsIndexes(i, n, l)
             s[i] = max(s[i], abs(A[i, j] ))
         end
@@ -16,7 +15,7 @@ function pivotalGaussianElimination(A, b, n, l)
         rmax = 0 # this block finds the largest scaled column entry
         j = -1
         for i in k:n
-            r = abs(A[p[i], k] /s[p[i]])
+            r = abs(A[p[i], k] / s[p[i]])
             if r > rmax
                 rmax = r
                 j = i # row index of largest scaled entry
