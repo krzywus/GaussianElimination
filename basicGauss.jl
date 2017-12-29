@@ -90,7 +90,6 @@ function forward(A, b, n)
         # println("forward i: $i/$n")
         for j in (i+1):n
             b[j] -= A[j,i] * b[i]
-            count += 1
         end
     end
 end
