@@ -59,7 +59,7 @@ function writeVectorToFile(vector, filename, error)
     println("Writing file $filename.")
     open(filename, "w") do file
         if error != nothing
-            write(file, error)
+            write(file, "$error\n")
         end
         for x in vector
             write(file, "$x\n")
