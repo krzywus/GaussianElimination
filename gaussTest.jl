@@ -52,6 +52,7 @@ if ARGS[1] in pivotAliases
         x = pivotalGaussianElimination(sparseA, b, n, l)
         toc()
 
+        writeVectorToFile(x, "x.txt", nothing)
         println(x[1:11])
         println(x[size(x)[1]:-1:size(x)[1]-10])
     else
@@ -67,6 +68,8 @@ elseif ARGS[1] in basicAliases
         tic()
         gaussElimination(sparseA, b, n, l)
         toc()
+
+        writeVectorToFile(b, "x.txt", nothing)
         println(b[1:11])
         println(b[size(b)[1]:-1:size(b)[1]-10])
     else
