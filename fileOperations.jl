@@ -1,6 +1,6 @@
 module fileOperations
 
-export readMatrixFromFile, readVectorFromFile, writeMatrixToFile
+export readMatrixFromFile, readVectorFromFile, writeMatrixToFile, writeVectorToFile
 
 function readMatrixFromFile(filename::String)
     println("Reading file $filename.")
@@ -55,4 +55,17 @@ function writeMatrixToFile(matrix, filename, delim="\t")
     println("Done writing file $filename.")
 end
 
+function writeVectorToFile(vector, filename, error)
+    println("Writing file $filename.")
+    open(filename, "w") do file
+        if error != nothing
+            write(file, error)
+        end
+        for x in vector
+            write(file, "$x\n")
+        end
+    end
+    println("Done writing file $filename.")
 end
+
+end #module
