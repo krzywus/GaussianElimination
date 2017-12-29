@@ -56,16 +56,8 @@ function gaussElimination(A, b, n, l)
 # A[wiersz, kolumna]
 #     — Gaussian Elimination —
     for k in 1:(n-1) # iterator kolumn
-        println("gauss k: $k/$n")
-        kmodl = k%l
-        if kmodl == l-1
-            limit = min(k+1+l, n)
-        elseif kmodl == 0
-            limit = min(k+l, n)
-        else
-            limit = min(k-k%l+l, n)
-        end
-        for i in (k+1):limit # iterator wierszy, zaczynając od 'poniżej przekątnej' do /końca/wiadomych zer
+        # println("gauss k: $k/$n")
+        for i in (k+1):getLimit(k%l, k, l, n) # iterator wierszy, zaczynając od 'poniżej przekątnej' do /końca/wiadomych zer
             # if A[i, k] == 0
             #     println("CAUGHT A ZERO")
             # end
@@ -77,19 +69,16 @@ function gaussElimination(A, b, n, l)
             end
         end
     end
-    # writeMatrixToFile(A, "tmp.csv")
-    println(b)
-    forward(A, b, n)
-    println(b)
+    forward(A, b, n, l)
     backward(A, b, n)
 end
 
-function forward(A, b, n)
+function forward(A, b, n, l)
 # — Forward Elimination —
     for i in 1:(n-1)
         # println("forward i: $i/$n")
-        for j in (i+1):n
-            b[j] -= A[j,i] * b[i]
+        for j in (i+1):getLimit(i%l, i, l, n)
+            b[j] -= A[j,i] * b[i]   # b[i] = x[i], mnożenie pozostałych przez ten współczynnik
         end
     end
 end
@@ -104,6 +93,16 @@ function backward(A, b, n)
             end
         end
         b[i] = b[i]/A[i,i]
+    end
+end
+
+function getLimit(mod, i, l, n)
+    if mod == l-1
+        return min(i+1+l, n)
+    elseif mod == 0
+        return min(i+l, n)
+    else
+        return min(i-mod+l, n)
     end
 end
 
@@ -122,7 +121,7 @@ else
     sparseA, N, l = readMatrixFromFile("data/1000_A.txt")
     b = readVectorFromFile("data/1000_B.txt")
 end
-writeMatrixToFile(sparseA, "starting.csv")
+# writeMatrixToFile(sparseA, "starting.csv")
 tic()
 gaussElimination(sparseA, b, N, l)
 toc()
