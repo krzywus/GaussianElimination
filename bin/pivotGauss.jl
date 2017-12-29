@@ -1,7 +1,7 @@
 include("fileOperations.jl")
 module pivotGauss
 
-export pivotalGaussianElimination
+export pivotalGaussianElimination, calculateVectorFromSolution
 
 function pivotalGaussianElimination(A, b, n, l)
     p = collect(1:n)
@@ -91,6 +91,16 @@ function getNonZeroElementsIndexes(i, n, l)
         push!(limit, i+l)
     end
     return limit
+end
+
+function calculateVectorFromSolution(A, x, n, l)
+    b = zeros(n)
+    for i in 1:n
+        for j in getNonZeroElementsIndexes(i, n, l)
+            b[i] +=  A[i, j] * x[i]
+        end
+    end
+    return b
 end
 
 end # module

@@ -36,44 +36,74 @@ function checkArgs()
     end
 end
 
+function getError(x, countError)
+    if countError
+        max_error = 0
+        # max_diff = 0
+        for X in x
+            error = (1.0-X)/1.0
+            # if(abs(1.0-X) > abs(max_diff))
+            #     max_diff = X
+            # end
+            if(abs(error) > abs(max_error))
+                max_error = error
+            end
+        end
+        return max_error
+    else
+        return nothing
+    end
+end
+
 
 checkArgs()
 
 pivotAliases = ["pivot", "piv", "p"]
 basicAliases = ["basic", "b"]
+xFilepath = "output/x.txt"
 
 if ARGS[1] in pivotAliases
     println("Using pivotal gaussian elimination.")
-    sparseA, n, l = readMatrixFromFile(ARGS[2])
+    A, n, l = readMatrixFromFile(ARGS[2])
     if size(ARGS)[1] > 2
         b = readVectorFromFile(ARGS[3])
-        println("Starting gaussian elimination.")
-        tic()
-        x = pivotalGaussianElimination(sparseA, b, n, l)
-        toc()
-
-        writeVectorToFile(x, "x.txt", nothing)
-        println(x[1:11])
-        println(x[size(x)[1]:-1:size(x)[1]-10])
+        countError = false
     else
-        println("not implemented")
-        x = ones(n)
+        println("Starting calculating vector b from Ax=b.")
+        tic()
+        b = calculateVectorFromSolution(A, ones(n), n, l)
+        toc()
+        countError = true
     end
+    println("Starting gaussian elimination.")
+    tic()
+    x = pivotalGaussianElimination(A, b, n, l)
+    toc()
+
+    mistake = getError(x, countError)
+    writeVectorToFile(x, xFilepath, mistake)
+    println(x[1:11])
+    println(x[size(x)[1]:-1:size(x)[1]-10])
 elseif ARGS[1] in basicAliases
     println("Using basic gaussian elimination.")
-    sparseA, n, l = readMatrixFromFile(ARGS[2])
+    A, n, l = readMatrixFromFile(ARGS[2])
     if size(ARGS)[1] > 2
         b = readVectorFromFile(ARGS[3])
-        println("Starting gaussian elimination.")
-        tic()
-        gaussElimination(sparseA, b, n, l)
-        toc()
-
-        writeVectorToFile(b, "x.txt", nothing)
-        println(b[1:11])
-        println(b[size(b)[1]:-1:size(b)[1]-10])
+        countError = false
     else
-        println("not implemented")
-        x = ones(n)
+        println("Starting calculating vector b from Ax=b.")
+        tic()
+        b = calculateVectorFromSolution(A, ones(n), n, l)
+        toc()
+        countError = true
     end
+    println("Starting gaussian elimination.")
+    tic()
+    gaussElimination(A, b, n, l)
+    toc()
+
+    mistake = getError(b, countError)
+    writeVectorToFile(b, xFilepath, mistake)
+    println(b[1:11])
+    println(b[size(b)[1]:-1:size(b)[1]-10])
 end
