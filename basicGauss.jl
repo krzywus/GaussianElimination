@@ -70,7 +70,7 @@ function gaussElimination(A, b, n, l)
         end
     end
     forward(A, b, n, l)
-    backward(A, b, n)
+    backward(A, b, n, l)
 end
 
 function forward(A, b, n, l)
@@ -83,13 +83,14 @@ function forward(A, b, n, l)
     end
 end
 
-function backward(A, b, n)
+function backward(A, b, n, l)
 #     — Backward Solve —
     for i in n:-1:1
         # println("backward u: $(n-i)/$n")
-        for j in (i+1):n
-            if b[j] != 0
+        for j in (i+1):min(i+l, n)
+            if b[j] != 0 && A[i, j] != 0
                 b[i] -= A[i,j]*b[j]
+
             end
         end
         b[i] = b[i]/A[i,i]
