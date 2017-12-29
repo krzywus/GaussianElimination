@@ -1,8 +1,9 @@
 include("fileOperations.jl")
-using fileOperations
+module pivotGauss
+
+export pivotalGaussianElimination
 
 function pivotalGaussianElimination(A, b, n, l)
-# - Gaussian Elimination -
     p = collect(1:n)
     s = zeros(n)
     count = 0
@@ -13,18 +14,18 @@ function pivotalGaussianElimination(A, b, n, l)
     end
     for k in 1:(n-1)
         rmax = 0 # this block finds the largest scaled column entry
-        j = -1
+        j = -1   # row index of largest scaled entry
         for i in k:n
             r = abs(A[p[i], k] / s[p[i]])
             if r > rmax
                 rmax = r
-                j = i # row index of largest scaled entry
+                j = i
             end
         end
-        p[k], p[j] = p[j], p[k] # exchange row pointers
+        p[k], p[j] = p[j], p[k] # exchange row pointers (to avoid swapping whole rows)
         for i in (k+1):getLimit(k%l, k, l, n) # perform elimination on submatrix
             pi, pk = p[i], p[k]
-            A[pi, k]  = A[pi, k] / A[pk, k]
+            A[pi, k] = A[pi, k] / A[pk, k]
             count += 1
             for j in (k+1):n
                 if A[pk, j] != 0
@@ -33,19 +34,17 @@ function pivotalGaussianElimination(A, b, n, l)
                 end
             end
         end
-        # println("$k")
     end
-    println("count:$count")
+    # println("count:$count")
     count += forwardPivotal(A, b, p, n, l)
-    println("count:$count")
+    # println("count:$count")
     x, tmpCount = backwardPivotal(A, b, p, n, l)
     count += tmpCount
-    println("count:$count")
+    println("Operations count: $count")
     return x
 end
 
-function forwardPivotal(A, b, p, n, l)
-# - Forward Elimination -
+function forwardPivotal(A, b, p, n, l) # forward elimination
     count = 0
     for k in 1:(n-1)
         for i in (k+1):getLimit(k%l, k, l, n)
@@ -56,8 +55,7 @@ function forwardPivotal(A, b, p, n, l)
     return count
 end
 
-function backwardPivotal(A, b, p, n, l)
-# - Backward Solve -
+function backwardPivotal(A, b, p, n, l) # backward solving
     count = 0
     x = zeros(n)
     for i in n:-1:1
@@ -95,18 +93,4 @@ function getNonZeroElementsIndexes(i, n, l)
     return limit
 end
 
-if size(ARGS)[1] > 0
-    sizeArg = parse(Int, ARGS[1])
-    sparseA, N, l = readMatrixFromFile("data/$(sizeArg)_A.txt")
-    b = readVectorFromFile("data/$(sizeArg)_B.txt")
-else
-    sparseA, N, l = readMatrixFromFile("data/1000_A.txt")
-    b = readVectorFromFile("data/1000_B.txt")
-end
-# writeMatrixToFile(sparseA, "starting.csv")
-tic()
-x = pivotalGaussianElimination(sparseA, b, N, l)
-toc()
-# writeMatrixToFile(sparseA, "comp.csv")
-println(x[1:11])
-println(x[size(x)[1]:-1:size(x)[1]-10])
+end # module
