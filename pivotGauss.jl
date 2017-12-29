@@ -3,18 +3,15 @@ using fileOperations
 
 function pivotalGaussianElimination(A, b, n, l)
 # - Gaussian Elimination -
-    p = Vector{Int}(n)
+    p = collect(1:n)
     s = zeros(n)
     count = 0
-    tic()
     for i in 1:n # rows iterator, this block computes the array of row maximal elements
         s[i] = 0
         for j in getNonZeroElementsIndexes(i, n, l)
             s[i] = max(s[i], abs(A[i, j] ))
         end
-        p[i] = i # initialize row pointers: row numbers
     end
-    toc()
     for k in 1:(n-1)
         rmax = 0 # this block finds the largest scaled column entry
         j = -1
@@ -47,6 +44,7 @@ function pivotalGaussianElimination(A, b, n, l)
     println("count:$count")
     return x
 end
+
 function forwardPivotal(A, b, p, n, l)
 # - Forward Elimination -
     count = 0
