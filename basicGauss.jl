@@ -51,30 +51,6 @@ function writeMatrixToFile(matrix, filename, delim="\t")
     println("Done writing file $filename.")
 end
 
-function forward(A, b, n)
-# — Forward Elimination —
-    for i in 1:(n-1)
-        # println("forward i: $i/$n")
-        for j in (i+1):n
-            if b[i] != 0
-                b[j] -= A[j,i] * b[i]
-            end
-        end
-    end
-end
-
-function backward(A, b, n)
-#     — Backward Solve —
-    for i in n:-1:1
-        # println("backward u: $(n-i)/$n")
-        for j in (i+1):n
-            if b[j] != 0
-                b[i] -= A[i,j]*b[j]
-            end
-        end
-        b[i] = b[i]/A[i,i]
-    end
-end
 
 function gaussElimination(A, b, n, l)
 # A[wiersz, kolumna]
@@ -101,8 +77,35 @@ function gaussElimination(A, b, n, l)
             end
         end
     end
+    # writeMatrixToFile(A, "tmp.csv")
+    println(b)
     forward(A, b, n)
+    println(b)
     backward(A, b, n)
+end
+
+function forward(A, b, n)
+# — Forward Elimination —
+    for i in 1:(n-1)
+        # println("forward i: $i/$n")
+        for j in (i+1):n
+            b[j] -= A[j,i] * b[i]
+            count += 1
+        end
+    end
+end
+
+function backward(A, b, n)
+#     — Backward Solve —
+    for i in n:-1:1
+        # println("backward u: $(n-i)/$n")
+        for j in (i+1):n
+            if b[j] != 0
+                b[i] -= A[i,j]*b[j]
+            end
+        end
+        b[i] = b[i]/A[i,i]
+    end
 end
 
 # A = [2.0    -2.0   0.0;
@@ -120,6 +123,7 @@ else
     sparseA, N, l = readMatrixFromFile("data/1000_A.txt")
     b = readVectorFromFile("data/1000_B.txt")
 end
+writeMatrixToFile(sparseA, "starting.csv")
 tic()
 gaussElimination(sparseA, b, N, l)
 toc()
