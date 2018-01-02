@@ -1,9 +1,6 @@
-# module gauss
-include("fileOperations.jl")
-using fileOperations
+module gaussLU
 
-# export LUdecompose
-
+export LUdecompose, solveLyb, solveUxy
 
 function LUdecompose(A, n, l)
     # A[wiersz, kolumna]
@@ -25,7 +22,7 @@ end
 
 
 # calculates Y and stores it in vector B. diagonal element of L are always ones.
-function solveLyb(A, b, n)
+function solveLyb(A, b, n, l)
     count = 0
     for i in 2:n
         Left = 0
@@ -42,7 +39,7 @@ function solveLyb(A, b, n)
 end
 
 # calculates X and stores it in vector Y
-function solveUxy(A, y, n)
+function solveUxy(A, y, n, l)
     count = 0
     y[n] = y[n]/A[n,n]
     for i in (n-1):-1:1
@@ -79,28 +76,4 @@ function getNonZeroElementsIndexes(i, n, l)
     return limit
 end
 
-# sparseA, N, l = readMatrixFromFile("data/100_A.txt")
-# b = readVectorFromFile("data/100_B.txt")
-if size(ARGS)[1] < 2
-    println("Not enough arguments")
-    exit(1)
-end
-sparseA, N, l = readMatrixFromFile(ARGS[1])
-b = readVectorFromFile(ARGS[2])
-
-println("LUdecompose")
-tic()
-LUdecompose(sparseA, N, l)
-toc()
-println("solveLyb")
-tic()
-solveLyb(sparseA, b, N)
-toc()
-println("solveUxy")
-tic()
-solveUxy(sparseA, b, N)
-toc()
-println(b[1:11])
-println(b[size(b)[1]:-1:size(b)[1]-10])
-
-# println(sparseA)
+end # module
