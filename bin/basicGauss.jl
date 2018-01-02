@@ -4,14 +4,14 @@ export gaussElimination
 
 function gaussElimination(A, b, n, l)
     count = 0
-    for k in 1:(n-1) # iterator kolumn
-        for i in (k+1):getLimit(k%l, k, l, n) # iterator wierszy, zaczynając od 'poniżej przekątnej' do /końca/wiadomych zer
+    for k in 1:(n-1)
+        for i in (k+1):getLimit(k%l, k, l, n)
             A[i,k] = A[i,k]/A[k,k]
             count += 1
             for j in (k+1):n
                 if A[k,j] != 0
                     A[i,j] -= A[i,k]*A[k,j]
-                    count += 1
+                    count += 2
                 end
             end
         end
@@ -28,7 +28,7 @@ function forward(A, b, n, l)
     for i in 1:(n-1)
         for j in (i+1):getLimit(i%l, i, l, n)
             b[j] -= A[j,i] * b[i]   # b[i] = x[i], mnożenie pozostałych przez ten współczynnik
-            count += 1
+            count += 2
         end
     end
     return count
@@ -39,7 +39,7 @@ function backward(A, b, n, l)
     for i in n:-1:1
         for j in (i+1):min(i+l, n)
             b[i] -= A[i,j]*b[j]
-            count += 1
+            count += 2
         end
         b[i] = b[i]/A[i,i]
         count += 1

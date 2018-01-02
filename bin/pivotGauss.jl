@@ -10,13 +10,15 @@ function pivotalGaussianElimination(A, b, n, l)
     for i in 1:n # rows iterator, this block computes the array of row maximal elements
         for j in getNonZeroElementsIndexes(i, n, l)
             s[i] = max(s[i], abs(A[i, j] ))
+            count += 1
         end
     end
     for k in 1:(n-1)
         rmax = 0 # this block finds the largest scaled column entry
         j = -1   # row index of largest scaled entry
-        for i in k:n
+        for i in k:getLimit(k%l, k, l, n)
             r = abs(A[p[i], k] / s[p[i]])
+            count +=1
             if r > rmax
                 rmax = r
                 j = i
@@ -30,7 +32,7 @@ function pivotalGaussianElimination(A, b, n, l)
             for j in (k+1):n
                 if A[pk, j] != 0
                     A[pi, j] -= A[pi, k] * A[pk, j]
-                    count += 1
+                    count += 2
                 end
             end
         end
@@ -49,7 +51,7 @@ function forwardPivotal(A, b, p, n, l) # forward elimination
     for k in 1:(n-1)
         for i in (k+1):getLimit(k%l, k, l, n)
             b[p[i]] -= A[p[i], k] * b[p[k]]
-            count += 1
+            count += 2
         end
     end
     return count
@@ -61,7 +63,7 @@ function backwardPivotal(A, b, p, n, l) # backward solving
     for i in n:-1:1
         for j in (i+1):min(convert(Int, i+l*1.5+1), n)
             b[p[i]] -= A[p[i], j] * x[j]
-            count += 1
+            count += 2
         end
         x[i] = b[p[i]] / A[p[i], i]
         # count += 1
