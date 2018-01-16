@@ -29,7 +29,7 @@ function pivotalGaussianElimination(A, b, n, l)
             pi, pk = p[i], p[k]
             A[pi, k] = A[pi, k] / A[pk, k]
             count += 1
-            for j in (k+1):n
+            for j in (k+1):min(k+2*l, n)
                 if A[pk, j] != 0
                     A[pi, j] -= A[pi, k] * A[pk, j]
                     count += 2

@@ -8,11 +8,11 @@ function gaussElimination(A, b, n, l)
         for i in (k+1):getLimit(k%l, k, l, n)
             A[i,k] = A[i,k]/A[k,k]
             count += 1
-            for j in (k+1):n
-                if A[k,j] != 0
+            for j in (k+1):min(k+l, n)
+                # if A[k,j] != 0
                     A[i,j] -= A[i,k]*A[k,j]
                     count += 2
-                end
+                # end
             end
         end
     end

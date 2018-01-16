@@ -87,8 +87,8 @@ if ARGS[1] in pivotAliases
 
     mistake = getError(x, countError)
     writeVectorToFile(x, xFilepath, mistake)
-    println(x[1:11])
-    println(x[size(x)[1]:-1:size(x)[1]-10])
+    println(x[1:min(n,10)])
+    println(x[size(x)[1]:-1:size(x)[1]-min(n-1,9)])
 elseif ARGS[1] in basicAliases
     println("Using basic gaussian elimination.")
     A, n, l = readMatrixFromFile(ARGS[2])
@@ -109,8 +109,8 @@ elseif ARGS[1] in basicAliases
 
     mistake = getError(b, countError)
     writeVectorToFile(b, xFilepath, mistake)
-    println(b[1:11])
-    println(b[size(b)[1]:-1:size(b)[1]-10])
+    println(b[1:min(n,10)])
+    println(b[size(b)[1]:-1:size(b)[1]-min(n-1,9)])
 elseif ARGS[1] in LUAliases
     println("Using basic LU decomposition.")
     A, n, l = readMatrixFromFile(ARGS[2])
@@ -140,6 +140,6 @@ elseif ARGS[1] in LUAliases
 
     mistake = getError(b, countError)
     writeVectorToFile(b, xFilepath, mistake)
-    println(b[1:11])
-    println(b[size(b)[1]:-1:size(b)[1]-10])
+    println(b[1:min(n,10)])
+    println(b[size(b)[1]:-1:size(b)[1]-min(n-1,9)])
 end
